@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import Persons from './components/Persons';
 import Personform from './components/Personform';
 import Search from './components/Search';
+import Note from './components/Note'
+import axios from 'axios'
 
 function App() {
 	const [persons, setPersons] = useState([
@@ -12,6 +14,18 @@ function App() {
 	]);
 	
 	const [searchedValue, setSearchedValue] = useState('');
+	const [notes, setNotes] = useState([])
+
+	useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setNotes(response.data)
+      })
+  }, [])
+  console.log('render', notes.length, 'notes')
 
 	function handleSetPersons(newPerson) {
 
