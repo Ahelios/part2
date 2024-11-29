@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
 
-function Search({onFilter}) {
+function Search({handleSetSearchedValue}) {
   const [inputValue, setInputValue] = useState('');
 
   function handleSetSearchedName(event) {
 		const value = event.target.value;
 		setInputValue(value);
-    onFilter(value);
+    handleSetSearchedValue(value.toLowerCase());
 	}
 
   return (

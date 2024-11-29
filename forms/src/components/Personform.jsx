@@ -1,7 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
+import services from '../services';
 
-function Personform({ onSubmit }) {
+function Personform({ handleSetPersons }) {
 	const [newName, setNewName] = useState('');
 	const [newNumber, setNewNumber] = useState('');
 
@@ -13,17 +14,21 @@ function Personform({ onSubmit }) {
 		setNewNumber(event.target.value);
 	}
 
-	function handleSubmit(){
+	function handleSubmit() {
 		event.preventDefault();
-		onSubmit({
-			name: newName,
-			number: newNumber
+		const newPerson = { name: newName, number: newNumber };
+
+		services.createPerson(newPerson)
+		.then((response) => {
+			handleSetPersons({
+				name: newName,
+				number: newNumber,
+				id: response.data.id
+			});
+			setNewName('');   
+      setNewNumber(''); 
 		});
-		setNewName('');
-		setNewNumber('');
 	}
-
-
 
 	return (
 		<>

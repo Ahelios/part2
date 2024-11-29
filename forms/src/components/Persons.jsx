@@ -1,11 +1,15 @@
-import React from 'react'
+import axios from 'axios'
+import services from '../services.js'
 
-function Persons({ persons }) {
+function Persons({ persons, onDelete }) {
+
+
   return (
     <>
-      {persons.map((person) => (
+      {persons.map((person, ) => (
         <div key={person.id}>
           {person.name}-{person.number}
+          <button onClick={() => {onDelete(person.id)}}>Delete</button>
         </div>
       ))}
     </>
