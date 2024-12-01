@@ -2,13 +2,19 @@ import { useState, useEffect } from 'react';
 import Persons from './components/Persons';
 import Personform from './components/Personform';
 import Search from './components/Search';
-// import axios from 'axios';
+import "./index.css";
 import services from './services'
+import Notification from './components/Notification';
 
 function App() {
 	const [persons, setPersons] = useState([]);
-
 	const [searchedValue, setSearchedValue] = useState('');
+	const [Error, setError] = useState(
+		{
+			isError : false,
+			message : null
+		}
+	);
 
 	useEffect(() => {
 		services.getAllPersons()
@@ -26,12 +32,7 @@ function App() {
 
 		nameExists
 			? alert(`${newPerson.name} is already added to phonebook`)
-			: setPersons(
-					persons.concat({
-						...newPerson,
-						id: String(persons[persons.length - 1].id + 1),
-					})
-			  );
+			: setPersons(persons.concat(newPerson));
 	}
 
 	function handleSetSearchedValue(value) {
@@ -42,9 +43,19 @@ function App() {
 		const personToDelete = persons.find(person => person.id === id);
 
 		if(window.confirm(`Are you sure you want to delete ${personToDelete.name}?`)){
+			console.log(personToDelete)
 		services.deletePerson(id)
 		.then(() => {
 			setPersons(persons.filter(person => person.id !== id))
+			setError({
+				isError: false,
+				message: personToDelete.name + "has been deleted"
+			})
+		})
+		.finally(() => {
+			setTimeout(() => {
+				setError({ message: null, isError: false })
+			}, 5000)
 		})
 	}
 	}
@@ -64,6 +75,7 @@ function App() {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification isError={Error.isError} message={Error.message}/>
 			<Search handleSetSearchedValue={handleSetSearchedValue} />
 			<h2>Add new contact</h2>
 			<Personform handleSetPersons={handleSetPersons} />
